@@ -18,21 +18,21 @@ import {
     ApiProperty,
     ApiTags,
   } from '@nestjs/swagger';
-  // import { Roles } from 'src/common/decorators/roles.decorator';
-  // import { UserRoles } from 'src/common/enum/user-roles.enum';
-  // import { AuthGuard } from 'src/guards/auth.guard';
+  import { Roles } from 'src/shared/decorators/roles.decorator';
+  import { UserRole } from 'src/shared/enum/user.enum';
+  import { AuthGard } from 'src/guards/auth.guard';
   import { UploadService } from './upload.service';
   import { FileInterceptor } from '@nestjs/platform-express';
   import { Request } from 'express';
   
   @Controller('upload')
   @ApiTags('Upload')
-  // @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  // @Roles(UserRoles.ADMIN, UserRoles.CONTENT_MANAGER)
   export class UploadController {
     constructor(private uploadService: UploadService) {}
   
+    @UseGuards(AuthGard)
+    @Roles(UserRole.ADMIN)
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     @ApiConsumes('multipart/form-data')
@@ -48,6 +48,9 @@ import {
         },
       },
     })
+
+    @UseGuards(AuthGard)
+    @Roles(UserRole.ADMIN)
     uploadImage(
       @Req() req: Request,
   
@@ -66,6 +69,8 @@ import {
       return this.uploadService.uploadImage(req, file);
     }
   
+    @UseGuards(AuthGard)
+    @Roles(UserRole.ADMIN)
     @Delete(':id')
     deleteImage(@Param('id') id: number) {
       return this.uploadService.deleteImage(id);

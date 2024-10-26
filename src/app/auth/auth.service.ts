@@ -29,19 +29,19 @@ import {
   
     async logIn(params: LoginUserDto) {
       let user = await this.userService.findOne({
-        where: [{ userName: params.userName }, { email: params.userName }],
+        where: [{ email: params.email }],
       });
   
       if (!user)
         throw new HttpException(
-          'login or password is wrong',
+          'email or password is incorrect',
           HttpStatus.BAD_REQUEST,
         );
   
       let checkPassword = await bcrypt.compare(params.password, user.password);
       if (!checkPassword)
         throw new HttpException(
-          'login or password is wrong',
+          'email or password is incorrect',
           HttpStatus.BAD_REQUEST,
         );
   
@@ -64,7 +64,7 @@ import {
       try {
         await this.mailerService.sendMail({
           to: user.email,
-          subject: 'Welcome to TalkyTown',
+          subject: 'Welcome to I-Ticket',
           template: 'welcome',
           context: {
             fullName: user.fullName,
@@ -112,12 +112,12 @@ import {
       });
       if (!user) throw new NotFoundException();
       if (user.activationToken != params.token)
-        throw new HttpException('token is wrong', 400);
+        throw new HttpException('token is incorrct', 400);
       if (user.activationExpire < new Date())
         throw new HttpException('activation token is expired', 400);
   
       if (params.password != params.repeatPassword)
-        throw new HttpException('password is not same as repeatPassword', 400);
+        throw new HttpException('password is not the same as repeatPassword', 400);
   
       let password = await bcrypt.hash(params.password, 10);
   
@@ -129,7 +129,7 @@ import {
   
       return {
         status: true,
-        message: 'Your password is successfully updated',
+        message: 'Your password has been successfully updated',
       };
     }
   }

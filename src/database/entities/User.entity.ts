@@ -1,8 +1,9 @@
-import { BeforeInsert, Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { CommonEntity } from './Common.entity';
 import { UserGender, UserRole } from 'src/shared/enum/user.enum';
 
 import * as bcrypt from 'bcrypt';
+import { Order } from './Order.entity';
 
 @Entity()
 export class User extends CommonEntity {
@@ -13,9 +14,6 @@ export class User extends CommonEntity {
   lastName: string;
 
   @Column({ unique: true })
-  userName: string;
-
-  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -24,7 +22,7 @@ export class User extends CommonEntity {
   @Column()
   birthDate: Date;
 
-  @Column()
+  @Column({ unique: true })
   number:string;
 
   @Column({
@@ -38,6 +36,9 @@ export class User extends CommonEntity {
 
   @Column({ nullable: true })
   activationExpire: Date;
+
+  @OneToMany(() => Order, (order) => order.user, {onDelete: 'CASCADE'})
+  orders: Order[]
 
   @Column({
     type: 'enum',

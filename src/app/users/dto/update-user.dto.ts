@@ -1,12 +1,12 @@
 import { ApiProperty, PartialType, PickType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString, IsUrl, Length } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PickType(PartialType(CreateUserDto), [
   'firstName',
   'lastName',
-  'userName',
+  'number',
   'birthDate',
 ]) {
   @Type()

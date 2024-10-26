@@ -11,6 +11,11 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './app/auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { UserModule } from './app/users/user.module';
+import { CategoryModule } from './app/categories/category.module';
+import { EventsModule } from './app/events/events.module';
+import { UploadModule } from './app/uploads/upload.module';
+import { VenueModule } from './app/venue/venue.module';
 
 @Module({
   imports: [
@@ -32,11 +37,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     EventEmitterModule.forRoot(),
     MailerModule.forRoot({
       transport: {
-        host: 'config.smtp.host',
+        host: config.smtp.host,
         port: config.smtp.port,
         auth: {
           user: config.smtp.user,
-          pass: config.smtp.password,
+          pass: config.smtp.password, 
         },
       },
       defaults: {
@@ -60,6 +65,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       rootPath: join(__dirname, '../uploads')
     }),
     AuthModule,
+    UserModule,
+    CategoryModule,
+    EventsModule,
+    UploadModule,
+    EventsModule,
+    VenueModule
   ],
   controllers: [AppController],
   providers: [AppService],

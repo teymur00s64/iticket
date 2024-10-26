@@ -1,9 +1,9 @@
-import { ConflictException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/entities/User.entity';
-import { FindManyOptions, FindOptionsWhere, ILike, Not, Repository } from 'typeorm';
+import { FindManyOptions, Not, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { USER_BASIC_SELECT, USER_PROFILE_SELECT } from './user.select';
+import { USER_PROFILE_SELECT } from './user.select';
 import { ClsService } from 'nestjs-cls';
 import { FindParams } from 'src/shared/types/find.params';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,17 +15,6 @@ export class UserService {
     @InjectRepository(User)
     private userRepo: Repository<User>,
   ) {}
-
-  find(params: FindParams<User>){
-    const {where, select, relations, limit, page} = params;
-    const payload:FindManyOptions<User> = {where, select, relations}
-
-    if(limit>0) {
-      payload.take = limit;
-      payload.skip = limit* page
-    }
-    return this.userRepo.find(payload)
-  }
 
   findOne(params: Omit<FindParams<User>, 'limit' | 'page'>) {
     const { where, relations, select } = params;
@@ -46,15 +35,15 @@ export class UserService {
   }
   
   async create(params: Partial<CreateUserDto>) {
-    let checkUserName = await this.findOne({
-      where: { userName: params.userName },
+    let checkNumber = await this.findOne({
+      where: { number: params.number },
     });
-    if (checkUserName)
-      throw new ConflictException('This username is already exists');
+    if (checkNumber)
+      throw new ConflictException('This number already exists');
 
     let checkUserEmail = await this.findOne({ where: { email: params.email } });
     if (checkUserEmail)
-      throw new ConflictException('This email is already exists');
+      throw new ConflictException('This email already exists');
 
     let user = this.userRepo.create(params);
 
@@ -69,14 +58,14 @@ export class UserService {
     let payload: Partial<User> = {};
     for (let key in params) {
       switch (key) {
-        case 'userName':
-          let checkUserName = await this.findOne({
-            where: { userName: params.userName, id: Not(myUser.id) },
+        case 'number':
+          let checkNumber = await this.findOne({
+            where: { number: params.number, id: Not(myUser.id) },
           });
-          if (checkUserName)
-            throw new ConflictException('This username is already exists');
+          if (checkNumber)
+            throw new ConflictException('This number already exists');
 
-          payload.userName = params.userName;
+          payload.number = params.number;
           
           break;
         default:
@@ -93,6 +82,39 @@ export class UserService {
   }
 
   async update(id: number, params: Partial<User>) {
-    return await this.userRepo.update({ id }, params);
+
+    let payload: Partial<User> = {};
+    for (let key in params) {
+      switch (key) {
+        case 'number':
+          let checkNumber = await this.findOne({
+            where: { number: params.number, id: Not(id) },
+          });
+          if (checkNumber)
+            throw new ConflictException('This number already exists');
+
+          payload.number = params.number;
+          
+          break;
+        default:
+          payload[key] = params[key];
+          break;
+      }
+    }
+
+    return await this.userRepo.update({ id }, payload);
+  }
+
+  async delete(id: number) {
+  
+    const result = await this.userRepo.delete({ id });
+  
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+  
+    return {
+      message: 'User is deleted successfully',
+    };
   }
 }

@@ -27,13 +27,8 @@ export class CreateUserDto {
 
   @Type()
   @IsString()
-  @Length(5, 30)
-  @ApiProperty()
-  userName: string;
-
-  @Type()
-  @IsString()
-  @ApiProperty()
+  @Length(13, 13)
+  @ApiProperty({example: '0xx-xxx-xx-xx'})
   @Matches(/[0][0-9][0-9][-][0-9][0-9][0-9][-][0-9][0-9][-][0-9][0-9]/g, {
     message: 'not a valid format for a number',
   })

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { AuthGard } from 'src/guards/auth.guard';
@@ -6,17 +6,21 @@ import { User } from 'src/database/entities/User.entity';
 import { ClsService } from 'nestjs-cls';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { USER_PROFILE_SELECT } from './user.select';
+import { Roles } from 'src/shared/decorators/roles.decorator';
+import { UserRole } from 'src/shared/enum/user.enum';
 
 @Controller('user')
 @ApiTags('User')
 @ApiBearerAuth()
 export class UserController {
   constructor(
+
     private userService: UserService,
     private cls: ClsService
+    
   ) {}
 
-  @Get('profile')
+  @Get('my_profile')
   @UseGuards(AuthGard)
   async myProfile() {
     let user = await this.cls.get<User>('user');
@@ -26,18 +30,33 @@ export class UserController {
     });
   }
 
-  @Post('profile')
+  @Post('update_profile')
   @UseGuards(AuthGard)
   async updateProfile(@Body() body: UpdateUserDto) {
     return this.userService.updateProfile(body);
   }
+  
+  @Post('update_profile/:id')
+  @UseGuards(AuthGard)
+  @Roles(UserRole.ADMIN)
+  async update(@Param('id') id: number, @Body() body: UpdateUserDto) {
+    return this.userService.update(id, body);
+  }
 
   @Get('profile/:id')
   @UseGuards(AuthGard)
+  @Roles(UserRole.ADMIN)
   async userProfile(@Param('id') id: number) {
     let user = await this.userService.userProfile(id);
     if (!user) throw new NotFoundException();
     return user;
+  }
+
+  @Delete('profile/:id')
+  @UseGuards(AuthGard)
+  @Roles(UserRole.ADMIN)
+  delete(@Param('id') id: number) {
+    return this.userService.delete(id);
   }
 
 }

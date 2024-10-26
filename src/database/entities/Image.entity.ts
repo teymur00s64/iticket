@@ -1,4 +1,4 @@
-import { BeforeRemove, Column, Entity, ManyToOne } from 'typeorm';
+import { BeforeRemove, Column, Entity } from 'typeorm';
 import { CommonEntity } from './Common.entity';
 import { rmSync } from 'fs';
 import { join } from 'path';
