@@ -132,7 +132,7 @@ export class EventsService {
             .andWhere('event.id = :id', { id: params.eventId })
             .getOne();
   
-        return existingTemp 
+        return existingTemp
     }
     
 }

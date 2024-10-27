@@ -6,5 +6,6 @@ export class UpdateEventDto extends PickType(PartialType(CreateEventDto), [
     'language',
     'venue',
     'date',
-    'ageReq'
+    'ageReq',
+    'categories',
   ]) {}
