@@ -10,9 +10,3 @@ export interface FindParams<T> {
 };
 
 export type FindOneParams<T> = Omit<FindParams<T>, 'limit' | 'page' | 'order'>;
-
-export interface FilterParams<T> extends FindParams<T> {
-  filter?: {
-    categories: number[];
-  }
-}

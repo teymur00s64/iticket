@@ -106,7 +106,6 @@ export class VenueService {
 
 
   async existingEvent (params: CreateEventDto) {
-      let venueId = params.venue;
 
       const existingEvent = await this.venueRepo
           .createQueryBuilder('venue')

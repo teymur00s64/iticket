@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { CommonEntity } from "./Common.entity";
 import { ImageEntity } from "./Image.entity";
 import { Category } from "./Category.entity";
 import { Venue } from "./Venue.entity";
+import { TicketTemp } from "./TicketTemp.entity";
 
 @Entity()
 export class Event extends CommonEntity {
@@ -32,4 +33,7 @@ export class Event extends CommonEntity {
 
     @Column()
     date: Date;
+
+    @OneToMany(() => TicketTemp, (ticketTemps) => ticketTemps.eventId)
+    ticketTemps: TicketTemp[]
 }

@@ -9,6 +9,7 @@ import { GetEventDto } from "./dto/search-event.dto";
 import { EVENT_BASIC_SELECT } from "./events.select";
 import { Event } from "./../../database/entities/Event.entity";
 import { VenueService } from "../venue/venue.service";
+import { CreateTicketTempDto } from "../ticketTemplate/dto/ticketTemp-create.dto";
 
 @Injectable()
 export class EventsService {
@@ -43,7 +44,6 @@ export class EventsService {
           throw new ConflictException('This event name already exists');
     
         let checkLocation = await this.findOne({ where: { venue: { id: params.venue } } });
-        let checkTime = await this.findOne({ where: { date: params.date } });
         
        const existingEvent = await this.venueService.existingEvent(params);
        if (checkLocation)
@@ -122,5 +122,17 @@ export class EventsService {
           message: 'Event deleted successfully',
         };
       }
+
+      async existingTemp (params: CreateTicketTempDto) {
+
+        const existingTemp = await this.eventRepo
+            .createQueryBuilder('event')
+            .innerJoinAndSelect('event.ticketTemps', 'ticketTemp')
+            .where('ticketTemp.price = :price', { price: params.price })
+            .andWhere('event.id = :id', { id: params.eventId })
+            .getOne();
+  
+        return existingTemp 
+    }
     
 }

@@ -16,6 +16,7 @@ import { CategoryModule } from './app/categories/category.module';
 import { EventsModule } from './app/events/events.module';
 import { UploadModule } from './app/uploads/upload.module';
 import { VenueModule } from './app/venue/venue.module';
+import { TicketTempModule } from './app/ticketTemplate/ticketTemp.module';
 
 @Module({
   imports: [
@@ -70,7 +71,8 @@ import { VenueModule } from './app/venue/venue.module';
     EventsModule,
     UploadModule,
     EventsModule,
-    VenueModule
+    VenueModule,
+    TicketTempModule
   ],
   controllers: [AppController],
   providers: [AppService],
