@@ -9,7 +9,7 @@ import { GetEventDto } from "./dto/search-event.dto";
 import { EVENT_BASIC_SELECT } from "./events.select";
 import { Event } from "./../../database/entities/Event.entity";
 import { VenueService } from "../venue/venue.service";
-import { CreateTicketTempDto } from "../ticketTemplate/dto/ticketTemp-create.dto";
+import { CreateTicketDto } from "../tickets/dto/create-ticket.dto";
 
 @Injectable()
 export class EventsService {
@@ -38,6 +38,7 @@ export class EventsService {
         const { where, relations, select } = params;
         return this.eventRepo.findOne({ where, relations, select });
       }
+      
       async create(params: CreateEventDto) {
         let checkEventName = await this.findOne({ where: { name: params.name } });
         if (checkEventName)
@@ -84,7 +85,7 @@ export class EventsService {
     
         let mappedEvents = events.map((event) => {
           return {
-            ...events
+            ...event
           };
         });
     
@@ -123,16 +124,16 @@ export class EventsService {
         };
       }
 
-      async existingTemp (params: CreateTicketTempDto) {
+      async takenSeat (params: CreateTicketDto) {
 
-        const existingTemp = await this.eventRepo
+        const takenSeat = await this.eventRepo
             .createQueryBuilder('event')
-            .innerJoinAndSelect('event.ticketTemps', 'ticketTemp')
-            .where('ticketTemp.price = :price', { price: params.price })
+            .innerJoinAndSelect('event.tickets', 'ticket')
+            .where('ticket.seat = :seat', { seat: params.seat })
             .andWhere('event.id = :id', { id: params.eventId })
             .getOne();
   
-        return existingTemp
+        return takenSeat
     }
     
 }

@@ -1,56 +1,58 @@
-// import { Injectable } from "@nestjs/common";
-// import { InjectRepository } from "@nestjs/typeorm";
-// import { Order } from "src/database/entities/Order.entity";
-// import { In, Repository } from "typeorm";
-// import { FindOrderParams } from "./order.type";
-// import { CreateOrderDto } from "./dto/create-order.dto";
-// import { ProductService } from "src/product/product.service";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Order } from "src/database/entities/Order.entity";
+import { In, Repository } from "typeorm";
+import { CreateOrderDto } from "./dto/create-order.dto";
+import { TicketService } from "../tickets/ticket.service";
+import { FindParams } from "src/shared/types/find.params";
+import { TicketStatus } from "src/shared/enum/ticket.enum";
 
-// @Injectable()
-// export class OrderService {
-//     constructor(
-//         @InjectRepository(Order)
-//         private orderRepo:Repository<Order>, 
+@Injectable()
+export class OrderService {
+    constructor(
+        private ticketService:  TicketService,
+        
+        @InjectRepository(Order)
+        private orderRepo:  Repository<Order>
 
-//         private productService:ProductService
-//     ){}
+    ){}
 
-//     find(params?:FindOrderParams){
-//         let {where, select, relations, pagination} = params || {}
-//         const limit = pagination.limit || 10
-//         const page = pagination.page
-//         return this.orderRepo.find({
-//             where,
-//             select,
-//             relations,
-//             take: limit,
-//             skip: page * limit
-//         })
-//     }
+    find(params?:FindParams<Order>){
+        let {where, select, relations, limit, page} = params || {}
+        return this.orderRepo.find({
+            where,
+            select,
+            relations,
+            take: limit,
+            skip: page * limit
+        })
+    }
 
-//     findOne(id:number){
-//         return this.orderRepo.findOne({where: {id}})
-//     }
+    findOne(id:number){
+        return this.orderRepo.findOne({where: {id}})
+    }
 
-//     async create(params: CreateOrderDto){
-//         let productIds: number[] = params.items.map((item) => item.productId)
-//         let products = await this.productService.find({
-//             where: {id: In(productIds)},
-//         })
+    async create(params: CreateOrderDto){
+        let ticketIds: number[] = params.items.map((item) => item.ticketId)
+        let tickets = await this.ticketService.findAll({
+            where: {id: In(ticketIds)},
+        })
 
-//         let totalPrice = 0;
-//         for(let product of products)
-//         {
-//             totalPrice+= product.price;
-//         }
-//         let items = products.map((product) => {
-//             return {
-//                 amount: product.price,
-//                 product
-//             }
-//         })
-//         const order = this.orderRepo.create({...params, totalPrice, items})
-//         await order.save()
-//         return order
-//     }
-// }
+        let totalPrice = 0;
+        for(let ticket of tickets)
+        {
+            if(ticket.status ===TicketStatus.ACCEPTED){
+            totalPrice+= ticket.price;
+            }
+        }
+        let items = tickets.map((ticket) => {
+            return {
+                amount: ticket.price,
+                ticket
+            }
+        })
+        const order = this.orderRepo.create({...params, totalPrice, items})
+        await order.save()
+        return order
+    }
+}

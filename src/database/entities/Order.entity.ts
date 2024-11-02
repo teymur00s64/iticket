@@ -5,14 +5,6 @@ import { OrderItem } from "./OrderItem.entity";
 
 @Entity()
 export class Order extends CommonEntity {
-    @Column()
-    address: string;
-
-    @Column()
-    postCode: string;
-
-    @Column()
-    phone: string;
 
     @Column('float')
     totalPrice: number;

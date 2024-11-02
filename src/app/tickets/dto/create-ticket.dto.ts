@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsNumber } from "class-validator";
+import { IsNumber, Min } from "class-validator";
 
-export class CreateTicketTempDto {
-    
+export class CreateTicketDto {
+
     @Type()
     @ApiProperty()
     @IsNumber()
@@ -12,10 +12,12 @@ export class CreateTicketTempDto {
     @Type()
     @ApiProperty()
     @IsNumber()
-    quantity: number;
+    eventId: number;
 
     @Type()
     @ApiProperty()
     @IsNumber()
-    eventId: number;
+    @Min(1)
+    seat: number;
+
 }

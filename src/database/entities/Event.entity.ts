@@ -3,7 +3,7 @@ import { CommonEntity } from "./Common.entity";
 import { ImageEntity } from "./Image.entity";
 import { Category } from "./Category.entity";
 import { Venue } from "./Venue.entity";
-import { TicketTemp } from "./TicketTemp.entity";
+import { TicketEntity } from "./Ticket.entity";
 
 @Entity()
 export class Event extends CommonEntity {
@@ -34,6 +34,6 @@ export class Event extends CommonEntity {
     @Column()
     date: Date;
 
-    @OneToMany(() => TicketTemp, (ticketTemps) => ticketTemps.eventId)
-    ticketTemps: TicketTemp[]
+    @OneToMany(() => TicketEntity, (tickets) => tickets.eventId)
+    tickets: TicketEntity[];
 }

@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/database/entities/Category.entity';
 import { In, Repository } from 'typeorm';
-import { FindCategoryParams } from './category.types';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { FindParams } from 'src/shared/types/find.params';
 
 @Injectable()
 export class CategoryService {
@@ -12,7 +12,7 @@ export class CategoryService {
     private categoryRepo: Repository<Category>,
   ) {}
 
-  find(params?: FindCategoryParams) {
+  find(params?: Omit<FindParams<Category>, 'limit' | 'page'>) {
     const { where, select, relations } = params || {};
     return this.categoryRepo.find({ where, select, relations });
   }
@@ -21,7 +21,7 @@ export class CategoryService {
     return this.categoryRepo.findBy({ id: In(ids) });
   }
 
-  findOne(params?: FindCategoryParams) {
+  findOne(params?: Omit<FindParams<Category>, 'limit' | 'page'>) {
     const { where, select, relations } = params;
     return this.categoryRepo.findOne({ where, select, relations });
   }

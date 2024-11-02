@@ -7,27 +7,10 @@ export class CreateOrderItemDto {
     @Type()
     @ApiProperty()
     @IsNumber()
-    productId: number;
+    ticketId: number;
 }
 
 export class CreateOrderDto {
-    
-    @Type()
-    @ApiProperty()
-    @IsString()
-    @Min(10)
-    address: string;
-
-    @Type()
-    @ApiProperty()
-    @IsString()
-    @Length(3, 11)
-    postCode: string;
-
-    @Type()
-    @ApiProperty()
-    @IsString()
-    phone: string;
 
    @Type(() => CreateOrderItemDto)
    @ValidateNested({each: true})

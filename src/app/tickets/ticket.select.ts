@@ -1,10 +1,11 @@
-import { TicketTemp } from "src/database/entities/TicketTemp.entity";
+import { TicketEntity } from "src/database/entities/Ticket.entity";
 import { FindOptionsSelect } from "typeorm";
 
-export const TICKET_TEMP_BASIC_SELECT : FindOptionsSelect<TicketTemp> = {
+export const BASIC_TICKET_SELECT : FindOptionsSelect<TicketEntity> = {
+
     id: true,
+    seat: true,
     price: true,
-    quantity: true,
     eventId: {
         name: true,
         date: true,
@@ -16,4 +17,4 @@ export const TICKET_TEMP_BASIC_SELECT : FindOptionsSelect<TicketTemp> = {
             name: true
         }
     }
-};
+}
