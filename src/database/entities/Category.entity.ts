@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { CommonEntity } from './Common.entity';
 import { Event } from './Event.entity';
 
@@ -13,5 +13,10 @@ export class Category extends CommonEntity {
     name: 'category_event'
   })
   events: Event[];
+
+  @BeforeInsert()
+    nameToUpperCase() {
+        this.name = this.name.toUpperCase();
+    }
 
 }

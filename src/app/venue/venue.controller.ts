@@ -29,34 +29,36 @@ import { FindVenueDto } from './dto/search-venue.dto';
     @Roles(UserRole.ADMIN)
     @Get()
     search(@Query() query: FindVenueDto) {
-      return this.venueService.searchByName();
+      return this.venueService.searchByName(query);
     }
   
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Get(':id')
-    venueById(@Param('id') id: number) {
-      return this.venueService.findOne({ where: { id } });
+    async venueById(@Param('id') id: number) {
+      let venue = await this.venueService.findOne({ where: { id } });
+      if (!venue) return {status: 404, message: "This venue doesnt exist"};
+      return venue
     }
   
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Post()
-    create(@Body() body: CreateVenueDto) {
-      return this.venueService.create(body);
+    async create(@Body() body: CreateVenueDto) {
+      return await this.venueService.create(body);
     }
 
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Post(':id')
-    update(@Param('id') id: number, @Body() body: UpdateVenueDto) {
-    return this.venueService.update(id, body);
+    async update(@Param('id') id: number, @Body() body: UpdateVenueDto) {
+    return await this.venueService.update(id, body);
     }
   
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Delete(':id')
-    delete(@Param('id') id: number) {
-      return this.venueService.delete(id);
+    async delete(@Param('id') id: number) {
+      return await this.venueService.delete(id);
     }
   }

@@ -28,7 +28,4 @@ export class UploadService {
     return await image.remove();
   }
 
-  async deleteImages(images: ImageEntity[]) {
-    return await this.imageRepo.remove(images);
-  }
 }

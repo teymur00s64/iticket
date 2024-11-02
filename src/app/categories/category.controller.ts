@@ -34,21 +34,23 @@ import {
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Get(':id')
-    item(@Param('id') id: number) {
-      return this.categoryService.findOne({ where: { id }, relations: ['categories'] });
+    async item(@Param('id') id: number) {
+      let category = await this.categoryService.findOne({ where: { id }});
+      if (!category) return {status: 404, message: "This category doesnt exist"};
+      return category
     }
   
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Post()
-    create(@Body() body: CreateCategoryDto) {
-      return this.categoryService.create(body);
+    async create(@Body() body: CreateCategoryDto) {
+      return await this.categoryService.create(body);
     }
   
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     @Delete(':id')
-    delete(@Param('id') id: number) {
-      return this.categoryService.delete(id);
+    async delete(@Param('id') id: number) {
+      return await this.categoryService.delete(id);
     }
   }

@@ -6,7 +6,7 @@ import { UserRole } from "src/shared/enum/user.enum";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { CreateTicketDto } from "./dto/create-ticket.dto";
 
-@Controller()
+@Controller('ticket')
 @ApiTags('Ticket')
 export class TicketController {
     constructor(
@@ -18,30 +18,40 @@ export class TicketController {
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
     find(@Param('id') id: number) {
-       return this.ticketService.findOne({ where: { id }, relations: ['eventId'] });
+        let ticket = this.ticketService.findOne({ where: { id }, relations: ['eventId'] });
+        if (!ticket) return {status: 404, message: "This ticket doesnt exist"};
+        return ticket;
     }
   
     @Delete(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
-    delete(@Param('id') id: number) {
-     return this.ticketService.delete(id);
+    async delete(@Param('id') id: number) {
+     return await this.ticketService.delete(id);
+    }
+
+    @Post()
+    @ApiBearerAuth()
+    @UseGuards(AuthGard)
+    @Roles(UserRole.ADMIN)
+    async create(@Body() body: CreateTicketDto) {
+     return await this.ticketService.create(body);
     }
 
     @Post(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
-    acceptTicket(@Param('id') id: number) {
-     return this.ticketService.acceptTicket(id);
+    async acceptTicket(@Param('id') id: number) {
+     return await this.ticketService.acceptTicket(id);
     }
 
     @Post(':id')
     @ApiBearerAuth()
     @UseGuards(AuthGard)
     @Roles(UserRole.ADMIN)
-    rejectTicket(@Param('id') id: number) {
-     return this.ticketService.rejectTicket(id);
+    async rejectTicket(@Param('id') id: number) {
+     return await this.ticketService.rejectTicket(id);
     }
 }

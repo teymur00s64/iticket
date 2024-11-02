@@ -31,31 +31,33 @@ export class EventsController {
   @ApiBearerAuth()
   @UseGuards(AuthGard)
   find(@Param('id') id: number) {
-     return this.eventService.findOne({ where: { id }, relations: ['categories'] });
+    let event = this.eventService.findOne({ where: { id }, relations: ['categories'] });
+    if (!event) return {status: 404, message: "This event doesnt exist"};
+     return event
   }
 
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGard)
   @Roles(UserRole.ADMIN)
-  create(@Body() body: CreateEventDto): any {
-   return this.eventService.create(body);
+  async create(@Body() body: CreateEventDto) {
+   return await this.eventService.create(body);
   }
 
   @Post(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGard)
   @Roles(UserRole.ADMIN)
-   update(@Param('id') id: number, @Body() body: UpdateEventDto) {
-    return this.eventService.update(id, body);
+   async update(@Param('id') id: number, @Body() body: UpdateEventDto) {
+    return await this.eventService.update(id, body);
    }
 
   @Delete(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGard)
   @Roles(UserRole.ADMIN)
-  delete(@Param('id') id: number) {
-   return this.eventService.delete(id);
+  async delete(@Param('id') id: number) {
+   return await this.eventService.delete(id);
   }
 
 }

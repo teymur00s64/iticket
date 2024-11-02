@@ -27,12 +27,12 @@ export class SettingsController {
     @ApiBearerAuth()
     @UseGuards(AuthGard)
     async update(@Body() body: UpdateSettingsDto) {
-        return this.settingsService.update(body);
+        return await this.settingsService.update(body);
     }
 
     @Post('lightMode')
     async lightMode(mode: boolean) {
-        return this.settingsService.lightMode(mode);
+        return await this.settingsService.lightMode(mode);
     }
 
 }

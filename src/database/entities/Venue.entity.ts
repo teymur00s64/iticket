@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany } from "typeorm";
 import { CommonEntity } from "./Common.entity";
 import { Event } from "./Event.entity";
 
@@ -10,5 +10,10 @@ export class Venue extends CommonEntity {
 
     @OneToMany(() => Event, (events) => events.venue)
     events: Event[];
+
+    @BeforeInsert()
+    nameToUpperCase() {
+        this.name = this.name.toUpperCase();
+    }
 
 }

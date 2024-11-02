@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { CommonEntity } from "./Common.entity";
 import { ImageEntity } from "./Image.entity";
 import { Category } from "./Category.entity";
@@ -27,7 +27,7 @@ export class Event extends CommonEntity {
     @ManyToMany(() => Category, (category) => category.events, {onDelete: 'CASCADE'})
     categories: Partial<Category>[];
 
-    @OneToOne(() => ImageEntity)
+    @OneToOne(() => ImageEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'image_id' })
     imageId: Partial<ImageEntity>;
 
@@ -36,4 +36,9 @@ export class Event extends CommonEntity {
 
     @OneToMany(() => TicketEntity, (tickets) => tickets.eventId)
     tickets: TicketEntity[];
+
+    @BeforeInsert()
+    nameToUpperCase() {
+        this.name = this.name.toUpperCase();
+    }
 }

@@ -48,7 +48,7 @@ export class UserController {
   @Roles(UserRole.ADMIN)
   async userProfile(@Param('id') id: number) {
     let user = await this.userService.userProfile(id);
-    if (!user) throw new NotFoundException();
+    if (!user) return {status: 404, message: "This user doesnt exist"};
     return user;
   }
 

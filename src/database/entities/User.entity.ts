@@ -3,7 +3,7 @@ import { CommonEntity } from './Common.entity';
 import { UserGender, UserRole } from 'src/shared/enum/user.enum';
 
 import * as bcrypt from 'bcrypt';
-import { Order } from './Order.entity';
+import { TicketEntity } from './Ticket.entity';
 
 @Entity()
 export class User extends CommonEntity {
@@ -37,8 +37,8 @@ export class User extends CommonEntity {
   @Column({ nullable: true })
   activationExpire: Date;
 
-  @OneToMany(() => Order, (order) => order.user, {onDelete: 'CASCADE'})
-  orders: Order[]
+  @OneToMany(() => TicketEntity, (ticket) => ticket.user, {onDelete: 'CASCADE'})
+  tickets: TicketEntity[];
 
   @Column({
     type: 'enum',

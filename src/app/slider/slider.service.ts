@@ -18,9 +18,9 @@ export class SliderService {
         return this.eventRepo.findOne({ where, relations, select });
       }
 
-    getSlider(id: number)
+    async getSlider(id: number)
     {
-        return this.findOne({ 
+        return await this.findOne({ 
             where: {id: id},
             relations: ['image'],  
             select: SLIDER_BASIC_SELECT 

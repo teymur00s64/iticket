@@ -42,8 +42,8 @@ export class TicketService  {
     if (!checkTicketEvent)
       throw new ConflictException('This event does not exists');
     
-   const ifTaken = await this.eventService.takenSeat(params);
-   if (ifTaken)
+    const ifTaken = await this.eventService.takenSeat(params);
+    if (ifTaken)
      throw new ConflictException('This ticket is already bought');
 
     let ticket = await this.ticketRepo.create({
@@ -56,20 +56,6 @@ export class TicketService  {
           status: true,
           ticket,
         };
-  }
-
-    async delete(id: number) {
-    let event = await this.ticketRepo.findOne({where: { id }})
-    if (!event) throw new NotFoundException();
-    
-    let result = await this.ticketRepo.delete({ id });
-    if (result.affected === 0) throw new InternalServerErrorException();
-
-    await this.ticketRepo.delete({ id });
-    
-    return {
-      message: 'Ticket refunded successfully',
-    };
   }
 
     async acceptTicket(id: number)
@@ -99,6 +85,7 @@ export class TicketService  {
 
         if(ticket.status === TicketStatus.PENDING){
             ticket.status = TicketStatus.REJECTED;
+            ticket.price = -ticket.price;
         }
         else
         {
@@ -108,10 +95,23 @@ export class TicketService  {
         await ticket.save();
         return {
           status: true,
-          ticket
+          ticket,
+          message: 'Ticket refunded successfully'
         };
   }
 
+  async delete(id: number) {
+    let event = await this.ticketRepo.findOne({where: { id }})
+    if (!event) throw new NotFoundException();
+    
+    let result = await this.ticketRepo.delete({ id });
+    if (result.affected === 0) throw new InternalServerErrorException();
 
+    await this.ticketRepo.delete({ id });
+    
+    return {
+      message: 'Ticket refunded successfully',
+    };
+  }
 
 }

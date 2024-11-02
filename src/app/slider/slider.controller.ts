@@ -12,8 +12,10 @@ export class SliderController {
     ) {}
 
     @Get()
-    getSlider(@Query('id') id: number) {
-        return this.sliderService.getSlider(id);
+    async getSlider(@Query('id') id: number) {
+        let slider = await this.sliderService.getSlider(id);
+        if (!slider) return {status: 404, message: "Slider for this event doesnt exist"};
+        return slider
     }
     
 }

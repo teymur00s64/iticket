@@ -61,7 +61,7 @@ export class VenueService {
   
     async create(params: CreateVenueDto) {
 
-    let checkName = await this.findOne({ where: { name: params.name } });
+    let checkName = await this.findOne({ where: { name: params.name.toUpperCase() } });
 
       if (checkName)
         throw new ConflictException('This venue already exists');
@@ -76,7 +76,7 @@ export class VenueService {
     let payload: Partial<Venue> = {};
 
     let checkName = await this.findOne({
-        where: { name: params.name, id: Not(id) },
+        where: { name: params.name.toUpperCase(), id: Not(id) },
       });
       if (checkName)
         throw new ConflictException('This venue already exists');

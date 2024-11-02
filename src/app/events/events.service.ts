@@ -40,7 +40,7 @@ export class EventsService {
       }
       
       async create(params: CreateEventDto) {
-        let checkEventName = await this.findOne({ where: { name: params.name } });
+        let checkEventName = await this.findOne({ where: { name: params.name.toUpperCase() } });
         if (checkEventName)
           throw new ConflictException('This event name already exists');
     
