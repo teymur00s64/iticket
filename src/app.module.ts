@@ -18,7 +18,6 @@ import { UploadModule } from './app/uploads/upload.module';
 import { VenueModule } from './app/venue/venue.module';
 import { TicketModule } from './app/tickets/ticket.module';
 import { SliderModule } from './app/slider/slider.module';
-import { OrderModule } from './app/order/order.module';
 import { SettingsModule } from './app/siteSettings/siteSettings.module';
 
 @Module({
@@ -77,7 +76,6 @@ import { SettingsModule } from './app/siteSettings/siteSettings.module';
     VenueModule,
     TicketModule,
     SliderModule,
-    OrderModule,
     SettingsModule
   ],
   controllers: [AppController],
