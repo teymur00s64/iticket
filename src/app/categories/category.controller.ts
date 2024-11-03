@@ -24,15 +24,11 @@ import {
     
     ) {}
   
-    @UseGuards(AuthGard)
-    @Roles(UserRole.ADMIN)
     @Get()
     list() {
       return this.categoryService.find();
     }
   
-    @UseGuards(AuthGard)
-    @Roles(UserRole.ADMIN)
     @Get(':id')
     async item(@Param('id') id: number) {
       let category = await this.categoryService.findOne({ where: { id }});

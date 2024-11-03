@@ -8,10 +8,14 @@ import { FindVenueDto } from './dto/search-venue.dto';
 import { VENUE_BASIC_SELECT } from './venue.select';
 import { FindParams } from 'src/shared/types/find.params';
 import { CreateEventDto } from '../events/dto/create-event.dto';
+import { EventsService } from '../events/events.service';
 
 @Injectable()
 export class VenueService {
   constructor(
+
+    private eventService: EventsService,
+
     @InjectRepository(Venue)
     private venueRepo: Repository<Venue>,
   ) {}
@@ -91,11 +95,16 @@ export class VenueService {
   }
 
     async delete(id: number) {
-    let event = await this.venueRepo.findOne({where: { id }})
-    if (!event) throw new NotFoundException();
+    let venue = await this.venueRepo.findOne({where: { id }})
+    if (!venue) throw new NotFoundException();
+
+    let event = await this.eventService.findOne({ where: { venue: { id } } });
+    if (event) throw new ConflictException('There is an event at this time in this venue');
     
     let result = await this.venueRepo.delete({ id });
     if (result.affected === 0) throw new InternalServerErrorException();
+
+
 
     await this.venueRepo.delete({ id });
     

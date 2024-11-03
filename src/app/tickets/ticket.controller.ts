@@ -34,7 +34,6 @@ export class TicketController {
     @Post()
     @ApiBearerAuth()
     @UseGuards(AuthGard)
-    @Roles(UserRole.ADMIN)
     async create(@Body() body: CreateTicketDto) {
      return await this.ticketService.create(body);
     }
