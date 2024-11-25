@@ -72,7 +72,6 @@ import { SettingsModule } from './app/siteSettings/siteSettings.module';
     CategoryModule,
     EventsModule,
     UploadModule,
-    EventsModule,
     VenueModule,
     TicketModule,
     SliderModule,

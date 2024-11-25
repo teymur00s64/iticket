@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { FindManyOptions, FindOptionsWhere, ILike, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindParams } from "src/shared/types/find.params";
@@ -15,6 +15,7 @@ import { CreateTicketDto } from "../tickets/dto/create-ticket.dto";
 export class EventsService {
 
     constructor(
+      @Inject(forwardRef(() => VenueService))
         private venueService: VenueService,
         private categoryService: CategoryService,
         @InjectRepository(Event)

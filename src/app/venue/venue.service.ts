@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 import { Venue } from 'src/database/entities/Venue.entity';
@@ -14,6 +14,8 @@ import { EventsService } from '../events/events.service';
 export class VenueService {
   constructor(
 
+
+  @Inject(forwardRef(() => EventsService))
     private eventService: EventsService,
 
     @InjectRepository(Venue)
